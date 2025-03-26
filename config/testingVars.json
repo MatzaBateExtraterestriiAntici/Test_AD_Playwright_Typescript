@@ -1,0 +1,20 @@
+{
+  
+  "browser": "firefox",
+
+  "headless": true,
+  
+  "viewport_width": 1280,
+  "viewport_height": 720,
+
+  "timeout": 30000,
+  
+  "timeoutMinimum": 1000,
+  "timeoutVerySmall": 2000,
+  "timeoutSmall": 5000,
+  "timeoutMedium": 7500,
+  "timeoutLarge": 15000,
+  "timeoutExtraLarge": 30000,
+  "timeoutExagerate": 60000
+
+}
