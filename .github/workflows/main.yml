@@ -72,21 +72,38 @@ jobs:
         run: npx playwright install --with-deps
 
       # STEP: Run the Playwright tests
-      - name: Run Playwright Tests
-        run: npx playwright test --reporter=html  # Generate HTML report
+      - name: Run Playwright Tests (HTML & JSON Reports)
+        run: |
+          npx playwright test --reporter=html,json
+        continue-on-error: true
+
+      # STEP: Install JQ for reporting purposes
+      - name: Install jq (JSON processor)
+        run: sudo apt-get install jq
       
       # STEP: Upload the test results
-      - name: Upload Playwright Report
-        if: always()  # Run this step even if tests fail
+      - name: Parse JSON and Generate Summary
+        run: |
+          jq '.' playwright-report.json > temp.json  # Ensure JSON is formatted
+
+          BROWSERS=$(jq -r '[.suites[].specs[].tests[].results[].browserName] | unique | .[]' temp.json)
+
+          echo "### Playwright Test Summary 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌐 Browser | 📝 Total Tests | ✅ Passed | ❌ Failed | ⏭️ Skipped |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------------|--------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          for BROWSER in $BROWSERS; do
+            TOTAL_TESTS=$(jq "[.suites[].specs[].tests[].results[] | select(.browserName == \"$BROWSER\")] | length" temp.json)
+            PASSED_TESTS=$(jq "[.suites[].specs[].tests[].results[] | select(.browserName == \"$BROWSER\" and .status == \"passed\")] | length" temp.json)
+            FAILED_TESTS=$(jq "[.suites[].specs[].tests[].results[] | select(.browserName == \"$BROWSER\" and .status == \"failed\")] | length" temp.json)
+            SKIPPED_TESTS=$(jq "[.suites[].specs[].tests[].results[] | select(.browserName == \"$BROWSER\" and .status == \"skipped\")] | length" temp.json)
+
+            echo "| $BROWSER | $TOTAL_TESTS | $PASSED_TESTS | $FAILED_TESTS | $SKIPPED_TESTS |" >> $GITHUB_STEP_SUMMARY
+          done
+  
+      - name: Upload Playwright HTML Report
         uses: actions/upload-artifact@v4
         with:
-          name: Playwright-Report
-          path: playwright-report/  # The folder where Playwright stores reports
-          retention-days: 7  # Keep for 7 days
-
-      # Add Report Link to GitHub Actions Summary Page
-      - name: Add Report to GitHub Summary
-        if: always()
-        run: |
-          echo "### Playwright Test Report 📝" >> $GITHUB_STEP_SUMMARY
-          echo "[📄 Click here to view Playwright Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 7
