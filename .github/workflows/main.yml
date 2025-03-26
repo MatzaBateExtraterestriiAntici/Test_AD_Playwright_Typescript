@@ -74,7 +74,7 @@ jobs:
       # STEP: Run the Playwright tests
       - name: Run Playwright Tests (HTML & JSON Reports)
         run: |
-          npx playwright test --reporter=json > playwright-report.json || true
+          npx playwright test --reporter=json > playwright-report.json
         continue-on-error: true
 
       # STEP: Install JQ for reporting purposes
@@ -100,10 +100,3 @@ jobs:
 
             echo "| $BROWSER | $TOTAL_TESTS | $PASSED_TESTS | $FAILED_TESTS | $SKIPPED_TESTS |" >> $GITHUB_STEP_SUMMARY
           done
-  
-      - name: Upload Playwright HTML Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-html-report
-          path: playwright-report/
-          retention-days: 7
