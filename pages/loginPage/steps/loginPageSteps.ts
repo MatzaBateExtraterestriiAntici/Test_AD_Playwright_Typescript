@@ -22,19 +22,28 @@ export class LoginPage extends Browser implements iLoginPage {
     private loginUserNamesText = this.page.locator(repoVars.loginUserNames_Area_ID);
     private passWordToBeUsedText = this.page.locator(repoVars.loginPasswords_Area_ClassName);
 
-    async VerifyLoginPageContents() {
+    async LoginSuccessfully() {
+        var userNameToUse = await this.GetRandomUserNameFromPage();
+        while (userNameToUse == "locked_out_user") { // This user does not have priviledges to login, so here we'll simply retry the grab another user
+            userNameToUse = await this.GetRandomUserNameFromPage();
+        }
+        await new CustomActionsInputs(this.page, this.userNameInput).fillTextInsideInputAndVerifyText(userNameToUse);
         
-        await this.page.locator(repoVars.loginLogo_ClassName).waitFor({state: 'visible', timeout: 3000})
+        const passwordToUse = await this.GetPassWordFromPage();
+        await new CustomActionsInputs(this.page, this.passWordInput).fillTextInsideInputAndVerifyText(passwordToUse);
 
-        await expect(this.userNameInput).toBeEditable();
-        await expect(this.userNameInput).toHaveAttribute("placeholder", repoVars.userName_Input_Placeholder);
-        await expect(this.userNameInput).toHaveAttribute("type", repoVars.userName_Input_Type);
+        const timeoutToUse = userNameToUse == 'performance_glitch_user' ? testVars.timeoutExtraLarge : testVars.timeoutMedium ; // In case the performance user is picked - extend the wait time to 30 seconds
+        await new CustomActionsButtons(this.page, this.submitButton).clickOnButton(timeoutToUse); // Ensure 5 seconds load time for the click on the login
+        
+        await this.page.waitForURL(`${envVars.baseURL}inventory.html`, { timeout: timeoutToUse });
+    }
 
-        await expect(this.passWordInput).toBeEditable();
-        await expect(this.passWordInput).toHaveAttribute("placeholder", repoVars.password_Input_Placeholder);
-        await expect(this.passWordInput).toHaveAttribute("type", repoVars.password_Input_Type);
+    async VerifyLoginPageContents() {
+        await this.page.locator(repoVars.loginLogo_ClassName).waitFor({state: 'visible', timeout: testVars.timeoutMedium})
 
-        await expect(this.passWordInput).toBeVisible();
+        await this.ValidateCertainInputBoxExistsAndHasExpectedDefaultValues(this.userNameInput, repoVars.userName_Input_Placeholder, repoVars.userName_Input_Type);
+        await this.ValidateCertainInputBoxExistsAndHasExpectedDefaultValues(this.passWordInput, repoVars.password_Input_Placeholder, repoVars.password_Input_Type);
+
         await expect(this.submitButton).toBeEnabled(); // Defect in the site (it should be disabled...)
 
         await expect(this.loginUserNamesText).toBeVisible();
@@ -50,24 +59,16 @@ export class LoginPage extends Browser implements iLoginPage {
         }
     }
 
-    async LoginSuccessfully() {
-        var userNameToUse = await this.GetRandomUserNameFromPage();
-        while (userNameToUse == "locked_out_user") { // This user does not have priviledges to login, so here we'll simply retry the grab another user
-            userNameToUse = await this.GetRandomUserNameFromPage();
-        }
-        //await new CustomActionsInputs(this.page, this.userNameInput).typeTextInsideInput(userNameToUse);
-        await new CustomActionsInputs(this.page, this.userNameInput).fillTextInsideInputAndVerifyText(userNameToUse);
-        
-        const passwordToUse = await this.GetPassWordFromPage();
-        await new CustomActionsInputs(this.page, this.passWordInput).fillTextInsideInputAndVerifyText(passwordToUse);
+    //// PRIVATE METHODS
 
-        const timeoutToUse = userNameToUse == 'performance_glitch_user' ? testVars.timeoutExtraLarge : testVars.timeoutMedium ; // In case the performance user is picked - extend the wait time to 30 seconds
-        await new CustomActionsButtons(this.page, this.submitButton).clickOnButton(timeoutToUse); // Ensure 5 seconds load time for the click on the login
-        
-        await this.page.waitForURL(`${envVars.baseURL}inventory.html`, { timeout: timeoutToUse });
+    // Return the password value from the page
+    private async GetPassWordFromPage() {
+        await expect(this.passWordInput).toBeEditable();
+        // Get the inner text for passwords
+        const allPasswordsText = await this.passWordToBeUsedText.innerText();
+        // Split the 'password' text by new lines to create a list and return the second element (always the passward value)
+        return allPasswordsText.split('\n')[1];
     }
-
-    //// FUNCTION HELPERS AREA
 
     // Return a random user name to be used for login
     private async GetRandomUserNameFromPage() {
@@ -84,12 +85,11 @@ export class LoginPage extends Browser implements iLoginPage {
         return finalListOfUserNames[Math.floor(Math.random() * finalListOfUserNames.length)];
     }
 
-    // Return the password value from the page
-    private async GetPassWordFromPage() {
-        await expect(this.passWordInput).toBeEditable();
-        // Get the inner text for passwords
-        const allPasswordsText = await this.passWordToBeUsedText.innerText();
-        // Split the 'password' text by new lines to create a list and return the second element (always the passward value)
-        return allPasswordsText.split('\n')[1];
+    // Ensure that an input box exists and has expected default values
+    private async ValidateCertainInputBoxExistsAndHasExpectedDefaultValues(element: any, placehoderValue: string, typeValue: string) {
+        await expect(element).toBeEditable();
+        await expect(element).toHaveAttribute("placeholder", placehoderValue);
+        await expect(element).toHaveAttribute("type", typeValue);
+        await expect(element).toBeVisible();
     }
 }

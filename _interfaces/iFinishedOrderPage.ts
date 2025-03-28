@@ -1,4 +1,4 @@
 export interface iFinishedOrderPage {
-    ValidateTheFinishedOrderPage(firstName: string, lastName: string, postalCode: string): Promise<void>;
-    ValidateTheFinishedOrderPageValues(): Promise<void>;
+    // Method to validate the finished order page
+    ValidateTheFinishedOrderPage(firstName: string, lastName: string, postalCode: string, nameOfProduct: string, priceOfProduct: string): Promise<void>;
 }

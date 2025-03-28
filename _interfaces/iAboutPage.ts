@@ -1,6 +1,6 @@
 export interface iAboutPage {
-    VerifyAboutPageContents(): Promise<void>;
-    ClickOnTheHamburgerButton(): Promise<void>;
+    // Method to navigate to the About page
     GoToTheAboutPage(): Promise<void>;
-    ClickOnTheAboutButton(): Promise<void>;
+    // Method to verify the contents of the About page
+    VerifyAboutPageContents(): Promise<void>;
 }

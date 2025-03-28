@@ -6,11 +6,17 @@ test.describe.configure({ mode: 'serial' });  // Forces sequential execution of 
 const areaName = "Finished Order Page";
 
 test.describe(`Tests for the area: '${areaName}' ( @order )`, () => {
-  
+  const firstName = "Jane";
+  const lastName = "Doe";
+  const postalCode = "0123456789";
+
+  const nameOfProduct = "Sauce Labs Onesie";
+  const priceOfProduct = "$7.99";
+
   test(`Validate that a full purchase flow can be successfully executed ( @smokeTests )`, async ({ page }) => {
     const UI = new FinishedOrderPage(page);
 
-    await UI.ValidateTheFinishedOrderPage();
+    await UI.ValidateTheFinishedOrderPage(firstName, lastName, postalCode, nameOfProduct, priceOfProduct);
   });
 
 });

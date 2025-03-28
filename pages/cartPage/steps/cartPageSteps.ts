@@ -26,12 +26,9 @@ export class CartPage extends Browser implements iCartPage {
   }
 
   async NavigateToTheCartPageEmpty() {
-
     await this.page.waitForURL(`${envVars.baseURL}cart.html`, { timeout: testVars.timeoutMedium });
-
     const allCards = this.page.locator(repoVars.cartItem_Element_ClassName);
     await expect(allCards).toHaveCount(0);
-
   }
 
   async VerifCartPageContents() {
@@ -43,16 +40,15 @@ export class CartPage extends Browser implements iCartPage {
     await this._ProductsPage.VerifyProductsPageContents();
     await this._ProductsPage.AddCertainCardToCart(nameOfProduct);
     await this._ProductsPage.ClickOnTheCartButton();
-
-    //await new CustomActionsVarious(this.page).customPauseOnTest(5000);
+    
     await this.page.waitForURL(`${envVars.baseURL}cart.html`, { timeout: testVars.timeoutMedium });
-
-    const allCards = await this.page.locator(repoVars.cartItem_Element_ClassName);
+    const allCards = this.page.locator(repoVars.cartItem_Element_ClassName);
     await expect(allCards).toHaveCount(1);
   }
 
   async ClickOnTheCheckoutButton() {
-    await new CustomActionsButtons(this.page, await this.page.locator(repoVars.cartItem_CheckoutButton_ClassName)).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
+    await new CustomActionsButtons(this.page, await this.page.locator(repoVars.cartItem_CheckoutButton_ClassName)).clickOnButton(testVars.timeoutSmall, false); // Ensure 'testVars.timeoutSmall' seconds load time for the click on the login
     this.page.waitForURL(`${envVars.baseURL}checkout-step-one.html`, { timeout: testVars.timeoutMedium });
   }
+
 }
