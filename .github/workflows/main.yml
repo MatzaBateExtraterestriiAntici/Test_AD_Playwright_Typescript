@@ -79,6 +79,7 @@ jobs:
         run: |
           jq '.workers_count = ${{ vars.WORKERS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json config/testingVars.json
           echo 'Added the value "workers_count" = "${{ vars.WORKERS_TO_USE }}" in the "testingVars.json file.'
+        shell: bash
 
       # STEP: Change (if needed) the 'testingVariables' JSON configuration file (headless value)
       - name: Update 'headless' in JSON config
@@ -86,6 +87,7 @@ jobs:
         run: |
           jq '.headless = ${{ vars.HEADLESS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json config/testingVars.json
           echo 'Added the value "headless" = "${{ vars.HEADLESS_TO_USE }}" in the "testingVars.json file.'
+        shell: bash
 
       # STEP: Run the Playwright tests
       - name: Run Playwright Tests

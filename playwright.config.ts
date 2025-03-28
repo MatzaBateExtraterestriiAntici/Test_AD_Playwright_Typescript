@@ -3,9 +3,6 @@ import { defineConfig, devices } from '@playwright/test';
 const envVars = require('./config/environmentVars.json'); // ✅ Import JSON
 const testVars = require('./config/testingVars.json'); // ✅ Import JSON
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
