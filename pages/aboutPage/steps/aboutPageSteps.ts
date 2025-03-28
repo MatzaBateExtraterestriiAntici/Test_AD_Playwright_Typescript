@@ -31,20 +31,22 @@ export class AboutPage extends Browser implements iAboutPage {
     await this.ClickOnTheAboutButton();
   }
 
-  async ClickOnTheHamburgerButton() {
-    await new CustomActionsButtons(this.page, this.hamburgerButton).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
-    await expect(this.page.locator(repoVars.navigation_Menu_ClassName)).toBeVisible();
-  }
-
-  async ClickOnTheAboutButton() {
-    await new CustomActionsButtons(this.page, await this.page.locator(repoVars.navigation_Menu_About_Button_ID)).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
-    await this.page.waitForURL(this.sauceLabURL, { timeout: testVars.timeoutLarge });
-  }
-
   async VerifyAboutPageContents() {
     await this.page.waitForURL(this.sauceLabURL, { timeout: testVars.timeoutLarge });
     await expect(this.page.locator(repoVars.sauceLab_Header_Image_ClassName).locator("img")).toBeVisible();
     await expect(await (this.page.locator(repoVars.sauceLab_Header_Image_ClassName).locator("img")).getAttribute('src')).toEqual(repoVars.sauceLab_Header_Image_Src);
+  }
+
+  //// PRIVATE METHODS
+
+  private async ClickOnTheHamburgerButton() {
+    await new CustomActionsButtons(this.page, this.hamburgerButton).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
+    await expect(this.page.locator(repoVars.navigation_Menu_ClassName)).toBeVisible();
+  }
+
+  private async ClickOnTheAboutButton() {
+    await new CustomActionsButtons(this.page, await this.page.locator(repoVars.navigation_Menu_About_Button_ID)).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
+    await this.page.waitForURL(this.sauceLabURL, { timeout: testVars.timeoutLarge });
   }
 
 }

@@ -27,8 +27,7 @@ export class ProductsPage extends Browser implements iProductsPage {
     }
 
     async VerifyProductsPageContents() {   
-
-        await this.page.locator(repoVars.productLabel_ClassName).waitFor({state: 'visible', timeout: 3000})
+        await this.page.locator(repoVars.productLabel_ClassName).waitFor({state: 'visible', timeout: testVars.timeoutMedium})
 
         await expect(this.inventoryContainer).toBeVisible();
         await expect(this.inventoryContainer).toHaveAttribute("class", repoVars.inventory_Container_ClassName.replace(/\./g, ''));
@@ -43,8 +42,7 @@ export class ProductsPage extends Browser implements iProductsPage {
         await expect(this.page.locator(repoVars.cartIcon_ItemCount_ClassName)).toHaveCount(0);
 
         const allCards = await this.page.locator('.inventory_item_name').all();
-        var buttonToAddToCart;
-
+        let buttonToAddToCart: any;
         for (const card of allCards) {
             const itemName = await card.textContent();
             if (itemName?.trim() === cardName) {
@@ -56,7 +54,6 @@ export class ProductsPage extends Browser implements iProductsPage {
                     .locator('.btn_primary.btn_inventory');
             }
         }
-    
         buttonToAddToCart.click();
 
         await expect(this.page.locator(repoVars.cartIcon_Image_ClassName)).toBeVisible();
@@ -64,7 +61,7 @@ export class ProductsPage extends Browser implements iProductsPage {
     }
 
     async ClickOnTheCartButton() {
-        await new CustomActionsButtons(this.page, this.page.locator(repoVars.cartIcon_Image_ClassName)).clickOnButton(testVars.timeoutSmall, false); // Ensure 5 seconds load time for the click on the login
+        await new CustomActionsButtons(this.page, this.page.locator(repoVars.cartIcon_Image_ClassName)).clickOnButton(testVars.timeoutSmall, false); // Ensure X seconds load time for the click on the login
         this.page.waitForURL(`${envVars.baseURL}cart.html`, { timeout: testVars.timeoutSmall });
     }
 }
