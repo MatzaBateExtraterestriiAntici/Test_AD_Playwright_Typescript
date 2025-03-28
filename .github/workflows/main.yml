@@ -77,13 +77,13 @@ jobs:
       - name: Update 'workers' in JSON config
         if: ${{ vars.WORKERS_TO_USE != '' && vars.WORKERS_TO_USE != null && vars.WORKERS_TO_USE > 0 }}
         run: |
-          jq '.workers_count = ${{ vars.WORKERS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json cconfig/testingVars.json
+          jq '.workers_count = ${{ vars.WORKERS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json config/testingVars.json
 
       # STEP: Change (if needed) the 'testingVariables' JSON configuration file (headless value)
       - name: Update 'headless' in JSON config
         if: ${{ vars.HEADLESS_TO_USE != '' && vars.HEADLESS_TO_USE != null }}
         run: |
-          jq '.headless = ${{ vars.HEADLESS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json cconfig/testingVars.json
+          jq '.headless = ${{ vars.HEADLESS_TO_USE }}' config/testingVars.json > config/temp.json && mv config/temp.json config/testingVars.json
 
       # STEP: Run the Playwright tests
       - name: Run Playwright Tests
