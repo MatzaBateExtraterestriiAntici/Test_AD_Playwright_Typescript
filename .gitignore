@@ -1,7 +1,13 @@
 
-# Playwright
+# Playwright related
 node_modules/
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+undefined/
+
+# VS related
+.vscode/
+chrom*
+jq*

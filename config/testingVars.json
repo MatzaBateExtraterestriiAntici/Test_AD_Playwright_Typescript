@@ -3,6 +3,8 @@
   "browser": "firefox",
 
   "headless": true,
+  "retry_count": 2,
+  "workers_count": 4,
   
   "viewport_width": 1280,
   "viewport_height": 720,
