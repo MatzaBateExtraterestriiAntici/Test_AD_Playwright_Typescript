@@ -16,6 +16,12 @@ export interface iCustomActionsNavigations {
     navigateToURL(url: string, timeout: number): Promise<void>;
 }
 
+// Custom Actions for Dialogs (./_framework/customActionsDialogs.ts)
+export interface iCustomActionsDialogs {
+    accept(textForAccepting: string): Promise<void>;
+    dismiss(): Promise<void>;
+}
+
 // Custom Actions for VARIOUS (./_framework/customActionsVarious.ts)
 export interface iCustomActionsVarious {
     customPauseOnTest(timeout: number): Promise<void>;
