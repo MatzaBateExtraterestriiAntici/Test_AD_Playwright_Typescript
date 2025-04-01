@@ -17,6 +17,8 @@
   "timeoutMedium": 7500,
   "timeoutLarge": 15000,
   "timeoutExtraLarge": 30000,
-  "timeoutExagerate": 60000
+  "timeoutExagerate": 60000,
+
+  "DECRYPTION_KEY": "210219872202198723021987"
 
 }
