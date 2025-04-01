@@ -26,3 +26,10 @@ export interface iCustomActionsDialogs {
 export interface iCustomActionsVarious {
     customPauseOnTest(timeout: number): Promise<void>;
 }
+
+// Custom Actions for DATABASE (./_framework/customActionsDatabase.ts)
+export interface iCustomActionsDatabase {
+    insertIntoTable(queryToUse: string, queryArray: (string|number)[]): Promise<[number,number]>;
+    selectAllFromTable(tableName: string): Promise<any>;
+    deleteFromTable(queryToUse: string, queryArray: (string|number)[]): Promise<any[]>;
+}
