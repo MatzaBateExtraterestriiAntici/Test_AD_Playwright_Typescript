@@ -3,7 +3,7 @@ import { Database } from '../../database/databaseSteps';
 
 test.describe.configure({ mode: 'serial' });  // Forces sequential execution of each of the tests in the describe area below
 
-test('Insert the first user into the "users" table and verify values', async () => {
+test('Insert the first user into the "users" table and verify values ( @database )', async () => {
     const DB = new Database();
     
     const queryArray = ['Alice Johnson', 'alice@example.com', 25];
@@ -20,7 +20,7 @@ test('Insert the first user into the "users" table and verify values', async () 
 
 });
 
-test('Delete the first user from the "users" table', async () => {
+test('Delete the first user from the "users" table ( @database )', async () => {
     const DB = new Database();
     
     const queryArray = ['Alice Johnson', 'alice@example.com', 25];
